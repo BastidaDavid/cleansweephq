@@ -464,6 +464,8 @@ p {
 }
 
 .direct-call a {
+  display: inline-block;
+  margin-right: 1rem;
   color: var(--white);
   font-size: 1.35rem;
   font-weight: 900;
@@ -485,6 +487,14 @@ p {
 
 .field {
   min-width: 0;
+}
+
+.form-honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }
 
 .form-wide {

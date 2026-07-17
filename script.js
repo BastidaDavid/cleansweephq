@@ -1,13 +1,12 @@
 /*
   Quote form configuration:
-  Add a Formspree, Netlify Forms, Cloudflare Worker, or other secure endpoint
-  when the business is ready to receive form submissions.
-  Do not place API keys or private credentials in this file.
+  Formspree handles form delivery. Do not place API keys or private credentials in this file.
 */
-const QUOTE_ENDPOINT = "";
+const QUOTE_ENDPOINT = "https://formspree.io/f/FORM_ID_HERE";
 
 (() => {
   const businessPhone = "(661) 618-8375";
+  const businessEmail = "info@cleansweephq.com";
   const header = document.querySelector("[data-header]");
   const nav = document.querySelector("#primary-navigation");
   const menuToggle = document.querySelector("[data-menu-toggle]");
@@ -183,6 +182,19 @@ const QUOTE_ENDPOINT = "";
 
       const submitButton = form.querySelector('button[type="submit"]');
       const originalButtonText = submitButton ? submitButton.textContent : "";
+      const endpoint = form.getAttribute("action") || QUOTE_ENDPOINT;
+      const honeypot = form.querySelector('input[name="_gotcha"]');
+
+      if (honeypot && honeypot.value) {
+        form.reset();
+        form.classList.remove("was-submitted");
+        setStatus(
+          formStatus,
+          "Thank you! Your quote request has been sent. The Clean Sweep team will contact you shortly.",
+          "success"
+        );
+        return;
+      }
 
       try {
         if (submitButton) {
@@ -190,19 +202,27 @@ const QUOTE_ENDPOINT = "";
           submitButton.textContent = "Sending...";
         }
 
-        const response = await fetch(QUOTE_ENDPOINT, {
-          method: "POST",
+        const response = await fetch(endpoint, {
+          method: form.method || "POST",
           body: new FormData(form),
           headers: { Accept: "application/json" }
         });
 
         if (!response.ok) throw new Error("Quote endpoint returned an error.");
 
-        setStatus(formStatus, "Thank you. Your quote request was submitted.", "success");
+        setStatus(
+          formStatus,
+          "Thank you! Your quote request has been sent. The Clean Sweep team will contact you shortly.",
+          "success"
+        );
         form.reset();
         form.classList.remove("was-submitted");
       } catch (error) {
-        setStatus(formStatus, `We could not submit the form. Please call ${businessPhone} to complete your request.`, "error");
+        setStatus(
+          formStatus,
+          `Sorry, we could not send your request. Please call ${businessPhone} or email ${businessEmail}.`,
+          "error"
+        );
       } finally {
         if (submitButton) {
           submitButton.disabled = false;
