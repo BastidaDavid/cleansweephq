@@ -107,16 +107,6 @@ const QUOTE_ENDPOINT = "";
     document.querySelectorAll("[data-reveal]").forEach((element) => element.classList.add("is-visible"));
   }
 
-  document.querySelectorAll("[data-pointer-glow]").forEach((element) => {
-    element.addEventListener("pointermove", (event) => {
-      const rect = element.getBoundingClientRect();
-      const x = ((event.clientX - rect.left) / rect.width) * 100;
-      const y = ((event.clientY - rect.top) / rect.height) * 100;
-      element.style.setProperty("--cursor-x", `${x}%`);
-      element.style.setProperty("--cursor-y", `${y}%`);
-    });
-  });
-
   document.querySelectorAll("[data-hero-video]").forEach((video) => {
     const hero = video.closest(".video-hero");
     if (!hero) return;
