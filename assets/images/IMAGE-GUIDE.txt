@@ -1,0 +1,42 @@
+Clean Sweep Image Guide
+=======================
+
+The official Clean Sweep logo is stored at:
+
+assets/logo/clean-sweep-logo.jpg
+
+Use the complete logo in headers, mobile navigation, footers, and the concept-selection page.
+Because the current logo is a JPG with a white rectangular background, keep it on white or very light surfaces, or place it inside a clean white container on dark sections.
+
+If a transparent PNG or SVG version becomes available later, export it with the same proportions and update the logo path in the HTML/CSS. The layout is designed to preserve the logo's proportions without stretching.
+
+Recommended photograph files
+----------------------------
+
+1. street-sweeper-hero.webp
+   Recommended size: 1920 x 1200
+   Appears in: Hero sections across the concepts
+   Use: A wide professional photo of a street sweeper at a clean commercial property.
+   Notes: Avoid text, fake company logos, readable license plates, watermarks, or identifiable people.
+
+2. commercial-sweeping.webp
+   Recommended size: 1400 x 900
+   Appears in: Services and service-area sections
+   Use: A clean parking lot, commercial property, or active sweeping service image.
+   Notes: Landscape orientation works best.
+
+3. street-sweeping-detail.webp
+   Recommended size: 1400 x 1000
+   Appears in: Why Choose Clean Sweep sections
+   Use: A close detail of sweeping equipment, curb-line service, or a maintained exterior area.
+   Notes: Keep the image sharp and industrial, not overly staged.
+
+How to replace images
+---------------------
+
+1. Export each replacement image using the file name above.
+2. Place the file in this folder: assets/images/
+3. Keep images optimized for the web. WebP is recommended for photos.
+4. Refresh the browser and confirm the image is not stretched or cropped poorly.
+
+The current photos are temporary custom-generated placeholders and should be replaced with real company photography when the business owner has final assets.
