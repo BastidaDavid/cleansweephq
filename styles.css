@@ -419,12 +419,8 @@ p {
 
 .quote-grid {
   display: grid;
-  gap: clamp(2rem, 5vw, 4rem);
-  align-items: center;
-}
-
-.quote-grid {
-  grid-template-columns: minmax(340px, 0.86fr) minmax(0, 1fr);
+  grid-template-columns: minmax(360px, 0.92fr) minmax(520px, 1fr);
+  gap: clamp(2.2rem, 4vw, 3.5rem);
   align-items: start;
 }
 
@@ -441,7 +437,7 @@ p {
 
 /* Quote form */
 .quote-section {
-  padding-block: clamp(4rem, 8vw, 7rem);
+  padding-block: clamp(3.2rem, 5vw, 4.25rem);
   color: var(--white);
   background:
     radial-gradient(circle at 88% 15%, rgba(84, 180, 232, 0.2), transparent 22rem),
@@ -454,6 +450,7 @@ p {
 }
 
 .quote-copy > p {
+  max-width: 520px;
   color: rgba(255, 255, 255, 0.78);
   font-size: 1.06rem;
 }
@@ -463,8 +460,10 @@ p {
 }
 
 .direct-call {
-  margin-top: 2rem;
-  padding-top: 1.4rem;
+  display: grid;
+  gap: 0.28rem;
+  margin-top: 1rem;
+  padding-top: 0.95rem;
   border-top: 1px solid rgba(255, 255, 255, 0.18);
 }
 
@@ -474,39 +473,35 @@ p {
 }
 
 .direct-call a {
-  display: inline-block;
-  margin-right: 1rem;
+  display: inline-flex;
+  width: fit-content;
   color: var(--white);
-  font-size: 1.35rem;
+  font-size: clamp(1.08rem, 2vw, 1.28rem);
   font-weight: 900;
+  line-height: 1.2;
   overflow-wrap: anywhere;
+  transition: color 160ms ease, transform 160ms ease;
+}
+
+.direct-call a:hover {
+  color: var(--sky-blue);
+  transform: translateX(2px);
 }
 
 .quote-video-montage {
-  position: relative;
-  isolation: isolate;
-  min-height: clamp(370px, 41vw, 520px);
-  margin-top: clamp(2.2rem, 5vw, 3.5rem);
-}
-
-.quote-video-montage::before {
-  content: "";
-  position: absolute;
-  inset: 13% 2% 4% 8%;
-  z-index: -1;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: var(--radius);
-  background: linear-gradient(145deg, rgba(84, 180, 232, 0.14), rgba(255, 255, 255, 0.04));
-  transform: rotate(-2deg);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.72rem, 1.4vw, 0.9rem);
+  margin-top: clamp(1.15rem, 2vw, 1.4rem);
 }
 
 .montage-frame {
-  position: absolute;
+  position: relative;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: var(--radius);
   background: rgba(3, 28, 45, 0.72);
-  box-shadow: 0 26px 60px rgba(0, 0, 0, 0.34);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.3);
   transition: transform 260ms ease, border-color 260ms ease, box-shadow 260ms ease, filter 260ms ease;
   will-change: transform;
 }
@@ -527,11 +522,8 @@ p {
 }
 
 .montage-feature {
-  top: 0;
-  left: 0;
-  z-index: 1;
-  width: 87%;
-  aspect-ratio: 16 / 10;
+  grid-column: 1 / -1;
+  aspect-ratio: 16 / 7.4;
 }
 
 .montage-feature video {
@@ -539,11 +531,7 @@ p {
 }
 
 .montage-unload {
-  right: 0;
-  bottom: 8%;
-  z-index: 3;
-  width: 62%;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 16 / 7.7;
 }
 
 .montage-unload video {
@@ -551,11 +539,7 @@ p {
 }
 
 .montage-detail {
-  left: 7%;
-  bottom: 0;
-  z-index: 4;
-  width: 36%;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 16 / 7.7;
 }
 
 .montage-detail video {
@@ -565,33 +549,57 @@ p {
 .montage-frame:hover,
 .quote-video-montage:focus-within .montage-frame {
   border-color: rgba(84, 180, 232, 0.34);
-  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.42);
+  box-shadow: 0 24px 58px rgba(0, 0, 0, 0.38);
   filter: saturate(1.04) contrast(1.03);
   transform: translateY(-4px);
 }
 
 .montage-unload:hover,
 .quote-video-montage:focus-within .montage-unload {
-  transform: translateY(-7px) translateX(-2px);
+  transform: translateY(-4px);
 }
 
 .montage-detail:hover,
 .quote-video-montage:focus-within .montage-detail {
-  transform: translateY(-7px) translateX(2px);
+  transform: translateY(-4px);
 }
 
 .quote-form {
-  padding: clamp(1.25rem, 3vw, 2rem);
+  padding: clamp(1.1rem, 2vw, 1.45rem);
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: var(--radius);
   background: var(--white);
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
 }
 
+.quote-form label {
+  margin-bottom: 0.32rem;
+  font-size: 0.84rem;
+}
+
+.quote-form input,
+.quote-form select {
+  min-height: 44px;
+  padding-block: 0.62rem;
+}
+
+.quote-form textarea {
+  min-height: 108px;
+}
+
+.quote-form .form-submit {
+  min-height: 46px;
+  margin-top: 0.92rem;
+}
+
+.quote-form .form-status {
+  margin-top: 0.72rem;
+}
+
 .form-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
+  gap: 0.82rem;
 }
 
 .field {
@@ -899,6 +907,11 @@ textarea:focus {
   .desktop-quote {
     display: none;
   }
+
+  .quote-grid {
+    grid-template-columns: minmax(300px, 0.82fr) minmax(420px, 1fr);
+    gap: 1.5rem;
+  }
 }
 
 @media (max-width: 920px) {
@@ -964,7 +977,6 @@ textarea:focus {
     display: inline-flex;
   }
 
-  .quote-grid,
   .atlas-hero-grid,
   .atlas-services-grid,
   .atlas-about-grid {
@@ -990,13 +1002,28 @@ textarea:focus {
       linear-gradient(90deg, rgba(5, 35, 55, 0.54), rgba(5, 35, 55, 0.66));
   }
 
-  .quote-copy {
-    max-width: 760px;
+  .quote-grid {
+    grid-template-columns: minmax(280px, 0.82fr) minmax(390px, 1fr);
+    gap: 1.35rem;
   }
 
-  .quote-video-montage {
-    max-width: 720px;
-    min-height: clamp(430px, 68vw, 540px);
+  .montage-feature {
+    aspect-ratio: 16 / 8.8;
+  }
+
+  .montage-unload,
+  .montage-detail {
+    aspect-ratio: 16 / 9.5;
+  }
+}
+
+@media (max-width: 760px) {
+  .quote-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .quote-copy {
+    max-width: 640px;
   }
 }
 
@@ -1033,40 +1060,16 @@ textarea:focus {
   }
 
   .quote-video-montage {
-    display: flex;
-    flex-direction: column;
-    min-height: auto;
-    padding-bottom: 0.65rem;
-  }
-
-  .quote-video-montage::before {
-    inset: 7% 4% 2% 6%;
-    transform: rotate(-1.4deg);
-  }
-
-  .montage-frame {
-    position: relative;
-    inset: auto;
+    margin-top: 1.6rem;
   }
 
   .montage-feature {
-    z-index: 1;
-    width: 100%;
-    aspect-ratio: 16 / 10;
+    aspect-ratio: 16 / 9.6;
   }
 
-  .montage-unload {
-    z-index: 3;
-    width: 84%;
-    aspect-ratio: 16 / 9;
-    margin: 0.85rem 0 0 auto;
-  }
-
+  .montage-unload,
   .montage-detail {
-    z-index: 4;
-    width: min(58%, 220px);
-    aspect-ratio: 4 / 5;
-    margin: -1.6rem 0 0 0.6rem;
+    aspect-ratio: 1 / 0.78;
   }
 
   [data-reveal] {
@@ -1107,19 +1110,6 @@ textarea:focus {
 
   .hero-actions .button {
     width: 100%;
-  }
-
-  .quote-video-montage {
-    margin-top: 2rem;
-  }
-
-  .montage-unload {
-    width: 88%;
-  }
-
-  .montage-detail {
-    width: min(62%, 205px);
-    margin-top: -1.3rem;
   }
 
   .video-hero-cinematic .atlas-copy h1 {
