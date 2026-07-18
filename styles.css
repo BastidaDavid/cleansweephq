@@ -424,7 +424,7 @@ p {
 }
 
 .quote-grid {
-  grid-template-columns: minmax(260px, 0.7fr) minmax(0, 1fr);
+  grid-template-columns: minmax(340px, 0.86fr) minmax(0, 1fr);
   align-items: start;
 }
 
@@ -458,6 +458,10 @@ p {
   font-size: 1.06rem;
 }
 
+.quote-copy {
+  min-width: 0;
+}
+
 .direct-call {
   margin-top: 2rem;
   padding-top: 1.4rem;
@@ -475,6 +479,105 @@ p {
   color: var(--white);
   font-size: 1.35rem;
   font-weight: 900;
+  overflow-wrap: anywhere;
+}
+
+.quote-video-montage {
+  position: relative;
+  isolation: isolate;
+  min-height: clamp(370px, 41vw, 520px);
+  margin-top: clamp(2.2rem, 5vw, 3.5rem);
+}
+
+.quote-video-montage::before {
+  content: "";
+  position: absolute;
+  inset: 13% 2% 4% 8%;
+  z-index: -1;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius);
+  background: linear-gradient(145deg, rgba(84, 180, 232, 0.14), rgba(255, 255, 255, 0.04));
+  transform: rotate(-2deg);
+}
+
+.montage-frame {
+  position: absolute;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: var(--radius);
+  background: rgba(3, 28, 45, 0.72);
+  box-shadow: 0 26px 60px rgba(0, 0, 0, 0.34);
+  transition: transform 260ms ease, border-color 260ms ease, box-shadow 260ms ease, filter 260ms ease;
+  will-change: transform;
+}
+
+.montage-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(3, 28, 45, 0.02), rgba(3, 28, 45, 0.18));
+  pointer-events: none;
+}
+
+.montage-frame video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.01);
+}
+
+.montage-feature {
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 87%;
+  aspect-ratio: 16 / 10;
+}
+
+.montage-feature video {
+  object-position: 34% center;
+}
+
+.montage-unload {
+  right: 0;
+  bottom: 8%;
+  z-index: 3;
+  width: 62%;
+  aspect-ratio: 16 / 9;
+}
+
+.montage-unload video {
+  object-position: 45% 52%;
+}
+
+.montage-detail {
+  left: 7%;
+  bottom: 0;
+  z-index: 4;
+  width: 36%;
+  aspect-ratio: 4 / 5;
+}
+
+.montage-detail video {
+  object-position: 52% 70%;
+}
+
+.montage-frame:hover,
+.quote-video-montage:focus-within .montage-frame {
+  border-color: rgba(84, 180, 232, 0.34);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.42);
+  filter: saturate(1.04) contrast(1.03);
+  transform: translateY(-4px);
+}
+
+.montage-unload:hover,
+.quote-video-montage:focus-within .montage-unload {
+  transform: translateY(-7px) translateX(-2px);
+}
+
+.montage-detail:hover,
+.quote-video-montage:focus-within .montage-detail {
+  transform: translateY(-7px) translateX(2px);
 }
 
 .quote-form {
@@ -886,6 +989,15 @@ textarea:focus {
       linear-gradient(180deg, rgba(5, 35, 55, 0.76), rgba(5, 35, 55, 0.58)),
       linear-gradient(90deg, rgba(5, 35, 55, 0.54), rgba(5, 35, 55, 0.66));
   }
+
+  .quote-copy {
+    max-width: 760px;
+  }
+
+  .quote-video-montage {
+    max-width: 720px;
+    min-height: clamp(430px, 68vw, 540px);
+  }
 }
 
 @media (max-width: 720px) {
@@ -918,6 +1030,43 @@ textarea:focus {
   .section,
   .quote-section {
     padding-block: 3.5rem;
+  }
+
+  .quote-video-montage {
+    display: flex;
+    flex-direction: column;
+    min-height: auto;
+    padding-bottom: 0.65rem;
+  }
+
+  .quote-video-montage::before {
+    inset: 7% 4% 2% 6%;
+    transform: rotate(-1.4deg);
+  }
+
+  .montage-frame {
+    position: relative;
+    inset: auto;
+  }
+
+  .montage-feature {
+    z-index: 1;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+  }
+
+  .montage-unload {
+    z-index: 3;
+    width: 84%;
+    aspect-ratio: 16 / 9;
+    margin: 0.85rem 0 0 auto;
+  }
+
+  .montage-detail {
+    z-index: 4;
+    width: min(58%, 220px);
+    aspect-ratio: 4 / 5;
+    margin: -1.6rem 0 0 0.6rem;
   }
 
   [data-reveal] {
@@ -958,6 +1107,19 @@ textarea:focus {
 
   .hero-actions .button {
     width: 100%;
+  }
+
+  .quote-video-montage {
+    margin-top: 2rem;
+  }
+
+  .montage-unload {
+    width: 88%;
+  }
+
+  .montage-detail {
+    width: min(62%, 205px);
+    margin-top: -1.3rem;
   }
 
   .video-hero-cinematic .atlas-copy h1 {
