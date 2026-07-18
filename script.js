@@ -176,6 +176,8 @@ const QUOTE_ENDPOINT = "https://formspree.io/f/FORM_ID_HERE";
     };
 
     if (playlist.length > 1) {
+      const crossfadeLeadTime = 1.2;
+      const crossfadeCleanupDelay = 1300;
       let currentIndex = 0;
       let activeVideo = video;
       let standbyVideo = video.cloneNode(false);
@@ -210,17 +212,21 @@ const QUOTE_ENDPOINT = "https://formspree.io/f/FORM_ID_HERE";
 
       const prepareNext = () => {
         const nextIndex = (currentIndex + 1) % playlist.length;
-        standbyVideo.autoplay = false;
-        standbyVideo.pause();
-        setSource(standbyVideo, playlist[nextIndex]);
-        standbyVideo.addEventListener("loadedmetadata", () => {
-          standbyVideo.pause();
+        const target = standbyVideo;
+        const resetStandby = () => {
+          target.pause();
           try {
-            standbyVideo.currentTime = 0;
+            target.currentTime = 0;
           } catch (error) {
             // The video will still start from the beginning when activated.
           }
-        }, { once: true });
+        };
+
+        target.autoplay = false;
+        target.pause();
+        target.addEventListener("loadedmetadata", resetStandby, { once: true });
+        setSource(target, playlist[nextIndex]);
+        if (target.readyState >= 1) resetStandby();
       };
 
       const advancePlaylist = () => {
@@ -234,7 +240,6 @@ const QUOTE_ENDPOINT = "https://formspree.io/f/FORM_ID_HERE";
         const revealIncoming = () => {
           incomingVideo.autoplay = true;
           outgoingVideo.autoplay = false;
-          outgoingVideo.pause();
           incomingVideo.classList.remove("hero-video-standby");
           incomingVideo.classList.add("hero-video-active");
           outgoingVideo.classList.remove("hero-video-active");
@@ -243,9 +248,13 @@ const QUOTE_ENDPOINT = "https://formspree.io/f/FORM_ID_HERE";
           activeVideo = incomingVideo;
           standbyVideo = outgoingVideo;
           currentIndex = nextIndex;
-          switching = false;
           markReady();
-          prepareNext();
+
+          window.setTimeout(() => {
+            standbyVideo.pause();
+            switching = false;
+            prepareNext();
+          }, crossfadeCleanupDelay);
         };
 
         const startIncoming = () => {
@@ -275,7 +284,10 @@ const QUOTE_ENDPOINT = "https://formspree.io/f/FORM_ID_HERE";
       const advanceWhenDone = (event) => {
         if (event.target !== activeVideo) return;
         const duration = activeVideo.duration;
-        if (event.type === "ended" || (Number.isFinite(duration) && duration - activeVideo.currentTime <= 0.08)) {
+        if (
+          event.type === "ended" ||
+          (Number.isFinite(duration) && duration - activeVideo.currentTime <= crossfadeLeadTime)
+        ) {
           advancePlaylist();
         }
       };
