@@ -382,6 +382,14 @@ p {
   opacity: 1;
 }
 
+.video-hero.is-video-ready .hero-video.hero-video-standby {
+  opacity: 0;
+}
+
+.video-hero.is-video-ready .hero-video.hero-video-active {
+  opacity: 1;
+}
+
 .video-hero.is-video-fallback .hero-video {
   opacity: 0;
 }

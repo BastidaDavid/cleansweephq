@@ -146,6 +146,11 @@ const QUOTE_ENDPOINT = "https://formspree.io/f/FORM_ID_HERE";
     const hero = video.closest(".video-hero");
     if (!hero) return;
 
+    const playlist = (video.dataset.heroPlaylist || "")
+      .split(",")
+      .map((source) => source.trim())
+      .filter(Boolean);
+
     let playbackBlocked = false;
 
     const markReady = () => {
@@ -160,6 +165,141 @@ const QUOTE_ENDPOINT = "https://formspree.io/f/FORM_ID_HERE";
       hero.classList.remove("is-video-ready");
     };
 
+    const playVideo = (target) => {
+      const playAttempt = target.play();
+      if (playAttempt && typeof playAttempt.catch === "function") {
+        return playAttempt.then(markReady).catch(markFallback);
+      }
+
+      if (!target.paused) markReady();
+      return Promise.resolve();
+    };
+
+    if (playlist.length > 1) {
+      let currentIndex = 0;
+      let activeVideo = video;
+      let standbyVideo = video.cloneNode(false);
+      let switching = false;
+
+      activeVideo.classList.add("hero-video-active");
+      activeVideo.removeAttribute("loop");
+      activeVideo.loop = false;
+      activeVideo.muted = true;
+      activeVideo.playsInline = true;
+
+      standbyVideo.classList.remove("hero-video-active");
+      standbyVideo.classList.add("hero-video-standby");
+      standbyVideo.removeAttribute("data-hero-video");
+      standbyVideo.removeAttribute("data-hero-playlist");
+      standbyVideo.removeAttribute("loop");
+      standbyVideo.setAttribute("aria-hidden", "true");
+      standbyVideo.preload = "auto";
+      standbyVideo.muted = true;
+      standbyVideo.playsInline = true;
+      standbyVideo.loop = false;
+      standbyVideo.autoplay = false;
+      standbyVideo.controls = false;
+
+      activeVideo.after(standbyVideo);
+
+      const setSource = (target, source) => {
+        if (target.getAttribute("src") === source) return;
+        target.setAttribute("src", source);
+        target.load();
+      };
+
+      const prepareNext = () => {
+        const nextIndex = (currentIndex + 1) % playlist.length;
+        standbyVideo.autoplay = false;
+        standbyVideo.pause();
+        setSource(standbyVideo, playlist[nextIndex]);
+        standbyVideo.addEventListener("loadedmetadata", () => {
+          standbyVideo.pause();
+          try {
+            standbyVideo.currentTime = 0;
+          } catch (error) {
+            // The video will still start from the beginning when activated.
+          }
+        }, { once: true });
+      };
+
+      const advancePlaylist = () => {
+        if (switching) return;
+        switching = true;
+
+        const nextIndex = (currentIndex + 1) % playlist.length;
+        const outgoingVideo = activeVideo;
+        const incomingVideo = standbyVideo;
+
+        const revealIncoming = () => {
+          incomingVideo.autoplay = true;
+          outgoingVideo.autoplay = false;
+          outgoingVideo.pause();
+          incomingVideo.classList.remove("hero-video-standby");
+          incomingVideo.classList.add("hero-video-active");
+          outgoingVideo.classList.remove("hero-video-active");
+          outgoingVideo.classList.add("hero-video-standby");
+
+          activeVideo = incomingVideo;
+          standbyVideo = outgoingVideo;
+          currentIndex = nextIndex;
+          switching = false;
+          markReady();
+          prepareNext();
+        };
+
+        const startIncoming = () => {
+          incomingVideo.autoplay = true;
+          try {
+            incomingVideo.currentTime = 0;
+          } catch (error) {
+            // The preloaded video can still play from the beginning if seeking is delayed.
+          }
+
+          const playAttempt = incomingVideo.play();
+          if (playAttempt && typeof playAttempt.then === "function") {
+            playAttempt.then(revealIncoming).catch(markFallback);
+          } else {
+            revealIncoming();
+          }
+        };
+
+        if (incomingVideo.readyState >= 3) {
+          startIncoming();
+        } else {
+          incomingVideo.addEventListener("canplay", startIncoming, { once: true });
+          incomingVideo.load();
+        }
+      };
+
+      const advanceWhenDone = (event) => {
+        if (event.target !== activeVideo) return;
+        const duration = activeVideo.duration;
+        if (event.type === "ended" || (Number.isFinite(duration) && duration - activeVideo.currentTime <= 0.08)) {
+          advancePlaylist();
+        }
+      };
+
+      [activeVideo, standbyVideo].forEach((target) => {
+        target.addEventListener("ended", advanceWhenDone);
+        target.addEventListener("timeupdate", advanceWhenDone);
+        target.addEventListener("error", markFallback);
+      });
+
+      setSource(activeVideo, playlist[0]);
+      prepareNext();
+
+      activeVideo.addEventListener("loadeddata", () => {
+        if (!activeVideo.paused) markReady();
+      }, { once: true });
+      activeVideo.addEventListener("canplay", () => {
+        if (!activeVideo.paused) markReady();
+      }, { once: true });
+      activeVideo.addEventListener("playing", markReady, { once: true });
+      playVideo(activeVideo);
+      return;
+    }
+
     const markReadyIfPlaying = () => {
       if (!video.paused) markReady();
     };
@@ -169,12 +309,7 @@ const QUOTE_ENDPOINT = "https://formspree.io/f/FORM_ID_HERE";
     video.addEventListener("playing", markReady, { once: true });
     video.addEventListener("error", markFallback);
 
-    const playAttempt = video.play();
-    if (playAttempt && typeof playAttempt.catch === "function") {
-      playAttempt.then(markReady).catch(markFallback);
-    } else {
-      markReadyIfPlaying();
-    }
+    playVideo(video);
   });
 
   const setStatus = (statusElement, message, type) => {
