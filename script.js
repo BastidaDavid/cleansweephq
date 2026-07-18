@@ -106,6 +106,42 @@ const QUOTE_ENDPOINT = "https://formspree.io/f/FORM_ID_HERE";
     document.querySelectorAll("[data-reveal]").forEach((element) => element.classList.add("is-visible"));
   }
 
+  document.querySelectorAll("video[data-video-start], video[data-video-end]").forEach((video) => {
+    const start = Number.parseFloat(video.dataset.videoStart || "0");
+    const end = Number.parseFloat(video.dataset.videoEnd || "");
+    const hasStart = Number.isFinite(start) && start > 0;
+    const hasEnd = Number.isFinite(end) && end > (hasStart ? start : 0);
+
+    const seekToStart = () => {
+      if (!hasStart || video.currentTime >= start - 0.08) return;
+      try {
+        video.currentTime = start;
+      } catch (error) {
+        // Some browsers block seeking until more metadata is available.
+      }
+    };
+
+    if (video.readyState >= 1) seekToStart();
+    else video.addEventListener("loadedmetadata", seekToStart, { once: true });
+
+    if (!hasEnd) return;
+
+    video.addEventListener("timeupdate", () => {
+      if (video.currentTime < end) return;
+
+      try {
+        video.currentTime = hasStart ? start : 0;
+      } catch (error) {
+        return;
+      }
+
+      const replayAttempt = video.play();
+      if (replayAttempt && typeof replayAttempt.catch === "function") {
+        replayAttempt.catch(() => {});
+      }
+    });
+  });
+
   document.querySelectorAll("[data-hero-video]").forEach((video) => {
     const hero = video.closest(".video-hero");
     if (!hero) return;
