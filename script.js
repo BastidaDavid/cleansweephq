@@ -194,8 +194,13 @@ const QUOTE_ENDPOINT = "https://formspree.io/f/FORM_ID_HERE";
       target.setAttribute("controlslist", "nodownload noplaybackrate nofullscreen");
       target.removeAttribute("controls");
 
-      target.autoplay = true;
-      target.setAttribute("autoplay", "");
+      target.autoplay = shouldAutoplay;
+
+if (shouldAutoplay) {
+  target.setAttribute("autoplay", "");
+} else {
+  target.removeAttribute("autoplay");
+}
 
       if (isQuoteHero) {
         const preloadMode = useMobileQuoteFallback ? "metadata" : "auto";
@@ -207,48 +212,129 @@ const QUOTE_ENDPOINT = "https://formspree.io/f/FORM_ID_HERE";
     };
 
     if (useMobileQuoteFallback) {
-      const source = playlist[0] || video.getAttribute("src");
-      const keepMobileVideoVisible = () => {
-        hero.classList.add("is-video-ready", "is-mobile-video-ready");
-        hero.classList.remove("is-video-fallback", "is-mobile-video-fallback");
-      };
-      const markMobileVideoFallback = () => {
-        hero.classList.add("is-mobile-video-fallback");
-        hero.classList.remove("is-video-ready", "is-video-fallback", "is-mobile-video-ready");
-      };
-      const playMobileQuoteVideo = () => {
-        const playAttempt = video.play();
-        if (playAttempt && typeof playAttempt.catch === "function") {
-          playAttempt.then(keepMobileVideoVisible).catch(markMobileVideoFallback);
-          return;
-        }
+  const source = playlist[0] || video.getAttribute("src");
+  let mobilePlayRetryTimer = null;
 
-        if (!video.paused) keepMobileVideoVisible();
-        else markMobileVideoFallback();
-      };
+  const keepMobileVideoVisible = () => {
+    hero.classList.add("is-video-ready", "is-mobile-video-ready");
+    hero.classList.remove("is-video-fallback", "is-mobile-video-fallback");
+  };
 
-      video.classList.add("hero-video-active", "quote-video-mobile-fallback");
-      video.classList.remove("hero-video-standby");
-      video.loop = true;
-      video.setAttribute("loop", "");
-      configureBackgroundVideo(video, true);
+  const showMobilePosterFallback = () => {
+    hero.classList.add("is-mobile-video-fallback");
+    hero.classList.remove(
+      "is-video-ready",
+      "is-video-fallback",
+      "is-mobile-video-ready"
+    );
+  };
 
-      if (source && video.getAttribute("src") !== source) {
-        video.setAttribute("src", source);
-      }
+  const clearMobilePlayRetry = () => {
+    if (!mobilePlayRetryTimer) return;
+    window.clearTimeout(mobilePlayRetryTimer);
+    mobilePlayRetryTimer = null;
+  };
 
-      video.addEventListener("loadedmetadata", playMobileQuoteVideo, { once: true });
-      video.addEventListener("canplay", playMobileQuoteVideo, { once: true });
-      video.addEventListener("playing", keepMobileVideoVisible, { once: true });
-      video.addEventListener("error", markMobileVideoFallback);
-      video.load();
+  const playMobileQuoteVideo = () => {
+    clearMobilePlayRetry();
 
-      if (video.readyState >= 1) {
-        playMobileQuoteVideo();
-      }
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    video.controls = false;
+    video.autoplay = true;
+
+    const playAttempt = video.play();
+
+    if (playAttempt && typeof playAttempt.then === "function") {
+      playAttempt
+        .then(() => {
+          if (!video.paused && video.readyState >= 2) {
+            keepMobileVideoVisible();
+          }
+        })
+        .catch(() => {
+          showMobilePosterFallback();
+          mobilePlayRetryTimer = window.setTimeout(
+            playMobileQuoteVideo,
+            1200
+          );
+        });
 
       return;
     }
+
+    if (!video.paused && video.readyState >= 2) {
+      keepMobileVideoVisible();
+    } else {
+      showMobilePosterFallback();
+      mobilePlayRetryTimer = window.setTimeout(
+        playMobileQuoteVideo,
+        1200
+      );
+    }
+  };
+
+  video.classList.add(
+    "hero-video-active",
+    "quote-video-mobile-fallback"
+  );
+  video.classList.remove("hero-video-standby");
+
+  video.loop = true;
+  video.setAttribute("loop", "");
+
+  configureBackgroundVideo(video, true);
+
+  video.preload = "auto";
+  video.setAttribute("preload", "auto");
+
+  if (source && video.getAttribute("src") !== source) {
+    video.setAttribute("src", source);
+  }
+
+  video.addEventListener("loadedmetadata", playMobileQuoteVideo);
+  video.addEventListener("canplay", playMobileQuoteVideo);
+  video.addEventListener("canplaythrough", playMobileQuoteVideo);
+  video.addEventListener("playing", keepMobileVideoVisible);
+
+  video.addEventListener("pause", () => {
+    if (document.visibilityState === "visible") {
+      mobilePlayRetryTimer = window.setTimeout(
+        playMobileQuoteVideo,
+        300
+      );
+    }
+  });
+
+  video.addEventListener("stalled", () => {
+    mobilePlayRetryTimer = window.setTimeout(
+      playMobileQuoteVideo,
+      800
+    );
+  });
+
+  video.addEventListener("error", showMobilePosterFallback);
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+      playMobileQuoteVideo();
+    }
+  });
+
+  window.addEventListener("pageshow", playMobileQuoteVideo);
+
+  window.addEventListener(
+    "touchstart",
+    playMobileQuoteVideo,
+    { once: true, passive: true }
+  );
+
+  video.load();
+  playMobileQuoteVideo();
+
+  return;
+}
 
     if (playlist.length > 1) {
       const crossfadeLeadTime = 1.2;
