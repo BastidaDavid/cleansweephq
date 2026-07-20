@@ -185,13 +185,8 @@ const QUOTE_ENDPOINT = "https://formspree.io/f/FORM_ID_HERE";
       target.setAttribute("webkit-playsinline", "");
       target.removeAttribute("controls");
 
-      if (shouldAutoplay) {
-        target.autoplay = true;
-        target.setAttribute("autoplay", "");
-      } else {
-        target.autoplay = false;
-        target.removeAttribute("autoplay");
-      }
+      target.autoplay = true;
+      target.setAttribute("autoplay", "");
     };
 
     if (playlist.length > 1) {
@@ -338,6 +333,45 @@ const QUOTE_ENDPOINT = "https://formspree.io/f/FORM_ID_HERE";
 
     configureBackgroundVideo(video, true);
     playVideo(video);
+  });
+
+  document.querySelectorAll(".quote-section").forEach((section) => {
+    const toggleButton = section.querySelector("[data-quote-form-toggle]");
+    const formPanel = section.querySelector("[data-quote-form-panel]");
+    const closeButton = section.querySelector("[data-quote-form-close]");
+
+    if (!toggleButton || !formPanel) return;
+
+    const setFormOpen = (isOpen, shouldReturnFocus = false) => {
+      formPanel.classList.toggle("is-open", isOpen);
+      formPanel.setAttribute("aria-hidden", String(!isOpen));
+      toggleButton.setAttribute("aria-expanded", String(isOpen));
+
+      if (isOpen) {
+        formPanel.removeAttribute("inert");
+        if ("inert" in formPanel) formPanel.inert = false;
+      } else {
+        formPanel.setAttribute("inert", "");
+        if ("inert" in formPanel) formPanel.inert = true;
+        if (shouldReturnFocus) toggleButton.focus({ preventScroll: true });
+      }
+    };
+
+    setFormOpen(false);
+
+    toggleButton.addEventListener("click", () => {
+      const isOpen = toggleButton.getAttribute("aria-expanded") === "true";
+      setFormOpen(!isOpen);
+    });
+
+    if (closeButton) {
+      closeButton.addEventListener("click", () => setFormOpen(false, true));
+    }
+
+    section.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape" || !formPanel.classList.contains("is-open")) return;
+      setFormOpen(false, true);
+    });
   });
 
   const setStatus = (statusElement, message, type) => {

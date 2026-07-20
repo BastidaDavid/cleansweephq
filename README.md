@@ -12,9 +12,10 @@ Static HTML/CSS/JS website concepts for Clean Sweep, a professional street sweep
 - `concept-ocean-cut.html` - bold editorial image-slice concept
 - `concept-county-atlas.html` - map-led service-area concept
 - `styles.css` - shared responsive styling and concept-specific design systems
-- `script.js` - mobile navigation, smooth anchors, header shadow, reveal effects, pointer glow, dynamic year, and quote-form validation
+- `script.js` - mobile navigation, smooth anchors, header shadow, reveal effects, video playlist handling, quote-form reveal, dynamic year, and quote-form validation
 - `assets/logo/full-logo-transparent.png` - official transparent logo
-- `assets/images/` - street sweeping photography placeholders and image guide
+- `assets/video/` - client-provided background videos used in the Free Quote montage
+- `assets/images/` - media guide for future client-provided photography
 
 ## Preview locally
 
@@ -40,17 +41,11 @@ assets/logo/full-logo-transparent.png
 
 The header uses transparent symbol and wordmark crops from the same logo source for a compact horizontal lockup. Keep the PNG files optimized and avoid spaces in logo file names.
 
-## Replace photographs
+## Add client photographs
 
-Replace these files in `assets/images/`:
+AI-generated placeholder photos have been removed. If the client provides original photography later, add optimized files to `assets/images/` and update the page references intentionally.
 
-```text
-assets/images/street-sweeper-hero.webp
-assets/images/commercial-sweeping.webp
-assets/images/street-sweeping-detail.webp
-```
-
-Recommended dimensions and usage notes are in:
+Usage notes are in:
 
 ```text
 assets/images/IMAGE-GUIDE.txt

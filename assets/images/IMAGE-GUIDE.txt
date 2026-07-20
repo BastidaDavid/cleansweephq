@@ -10,33 +10,26 @@ Keep logo files optimized for the web and avoid spaces in file names.
 
 The layout is designed to preserve the logo's proportions without stretching.
 
-Recommended photograph files
-----------------------------
+Photography
+-----------
 
-1. street-sweeper-hero.webp
-   Recommended size: 1920 x 1200
-   Appears in: Hero sections across the concepts
-   Use: A wide professional photo of a street sweeper at a clean commercial property.
-   Notes: Avoid text, fake company logos, readable license plates, watermarks, or identifiable people.
+AI-generated placeholder images have been removed from the project.
+Only add original client-provided photography here.
 
-2. commercial-sweeping.webp
-   Recommended size: 1400 x 900
-   Appears in: Services and service-area sections
-   Use: A clean parking lot, commercial property, or active sweeping service image.
-   Notes: Landscape orientation works best.
+Recommended dimensions:
 
-3. street-sweeping-detail.webp
-   Recommended size: 1400 x 1000
-   Appears in: Why Choose Clean Sweep sections
-   Use: A close detail of sweeping equipment, curb-line service, or a maintained exterior area.
-   Notes: Keep the image sharp and industrial, not overly staged.
+- Hero or wide background photo: 1920 x 1200
+- Section or service photo: 1400 x 900
+- Detail photo: 1400 x 1000
+
+Use sharp, professional images of the client's actual sweeping services, equipment, clean commercial properties, parking lots, or maintained exterior areas.
+Avoid fake company logos, watermarks, readable license plates, or identifiable people unless the client has approved their use.
 
 How to replace images
 ---------------------
 
-1. Export each replacement image using the file name above.
+1. Export each approved client image with a clean lowercase web file name.
 2. Place the file in this folder: assets/images/
 3. Keep images optimized for the web. WebP is recommended for photos.
-4. Refresh the browser and confirm the image is not stretched or cropped poorly.
-
-The current photos are temporary custom-generated placeholders and should be replaced with real company photography when the business owner has final assets.
+4. Update the relevant HTML or CSS reference.
+5. Refresh the browser and confirm the image is not stretched or cropped poorly.
