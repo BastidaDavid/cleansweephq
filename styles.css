@@ -439,8 +439,17 @@ p {
 
 .video-hero-cinematic .hero-video-overlay {
   background:
-    linear-gradient(90deg, rgba(5, 35, 55, 0.3), rgba(5, 35, 55, 0.66) 52%, rgba(5, 35, 55, 0.78)),
-    linear-gradient(180deg, rgba(5, 35, 55, 0.62), rgba(5, 35, 55, 0.5));
+    linear-gradient(
+      90deg,
+      rgba(5,35,55,.18),
+      rgba(5,35,55,.28) 50%,
+      rgba(5,35,55,.38)
+    ),
+    linear-gradient(
+      180deg,
+      rgba(5,35,55,.18),
+      rgba(5,35,55,.22)
+    );
 }
 
 .video-hero-cinematic.is-video-ready .hero-video {
@@ -796,7 +805,7 @@ textarea:focus {
 .atlas-hero.video-hero {
   background:
     linear-gradient(rgba(5, 35, 55, 0.22), rgba(5, 35, 55, 0.22)),
-    url("assets/logo/Main.JPG") center center / cover no-repeat;
+    url("assets/logo/Main.JPG") center 72% / cover no-repeat;
 }
 
 .video-hero-cinematic .atlas-hero-grid {
