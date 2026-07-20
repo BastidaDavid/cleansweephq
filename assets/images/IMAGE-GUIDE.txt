@@ -3,12 +3,12 @@ Clean Sweep Image Guide
 
 The official Clean Sweep logo is stored at:
 
-assets/logo/clean-sweep-logo.jpg
+assets/logo/full-logo-transparent.png
 
-Use the complete logo in headers, mobile navigation, footers, and the concept-selection page.
-Because the current logo is a JPG with a white rectangular background, keep it on white or very light surfaces, or place it inside a clean white container on dark sections.
+Use the transparent full logo in footers and the transparent symbol/wordmark crops in compact headers and mobile navigation.
+Keep logo files optimized for the web and avoid spaces in file names.
 
-If a transparent PNG or SVG version becomes available later, export it with the same proportions and update the logo path in the HTML/CSS. The layout is designed to preserve the logo's proportions without stretching.
+The layout is designed to preserve the logo's proportions without stretching.
 
 Recommended photograph files
 ----------------------------

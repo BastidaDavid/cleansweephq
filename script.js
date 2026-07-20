@@ -175,6 +175,25 @@ const QUOTE_ENDPOINT = "https://formspree.io/f/FORM_ID_HERE";
       return Promise.resolve();
     };
 
+    const configureBackgroundVideo = (target, shouldAutoplay) => {
+      target.muted = true;
+      target.defaultMuted = true;
+      target.playsInline = true;
+      target.controls = false;
+      target.setAttribute("muted", "");
+      target.setAttribute("playsinline", "");
+      target.setAttribute("webkit-playsinline", "");
+      target.removeAttribute("controls");
+
+      if (shouldAutoplay) {
+        target.autoplay = true;
+        target.setAttribute("autoplay", "");
+      } else {
+        target.autoplay = false;
+        target.removeAttribute("autoplay");
+      }
+    };
+
     if (playlist.length > 1) {
       const crossfadeLeadTime = 1.2;
       const crossfadeCleanupDelay = 1300;
@@ -186,8 +205,7 @@ const QUOTE_ENDPOINT = "https://formspree.io/f/FORM_ID_HERE";
       activeVideo.classList.add("hero-video-active");
       activeVideo.removeAttribute("loop");
       activeVideo.loop = false;
-      activeVideo.muted = true;
-      activeVideo.playsInline = true;
+      configureBackgroundVideo(activeVideo, true);
 
       standbyVideo.classList.remove("hero-video-active");
       standbyVideo.classList.add("hero-video-standby");
@@ -196,11 +214,8 @@ const QUOTE_ENDPOINT = "https://formspree.io/f/FORM_ID_HERE";
       standbyVideo.removeAttribute("loop");
       standbyVideo.setAttribute("aria-hidden", "true");
       standbyVideo.preload = "auto";
-      standbyVideo.muted = true;
-      standbyVideo.playsInline = true;
       standbyVideo.loop = false;
-      standbyVideo.autoplay = false;
-      standbyVideo.controls = false;
+      configureBackgroundVideo(standbyVideo, false);
 
       activeVideo.after(standbyVideo);
 
@@ -222,7 +237,7 @@ const QUOTE_ENDPOINT = "https://formspree.io/f/FORM_ID_HERE";
           }
         };
 
-        target.autoplay = false;
+        configureBackgroundVideo(target, false);
         target.pause();
         target.addEventListener("loadedmetadata", resetStandby, { once: true });
         setSource(target, playlist[nextIndex]);
@@ -238,8 +253,8 @@ const QUOTE_ENDPOINT = "https://formspree.io/f/FORM_ID_HERE";
         const incomingVideo = standbyVideo;
 
         const revealIncoming = () => {
-          incomingVideo.autoplay = true;
-          outgoingVideo.autoplay = false;
+          configureBackgroundVideo(incomingVideo, true);
+          configureBackgroundVideo(outgoingVideo, false);
           incomingVideo.classList.remove("hero-video-standby");
           incomingVideo.classList.add("hero-video-active");
           outgoingVideo.classList.remove("hero-video-active");
@@ -258,7 +273,7 @@ const QUOTE_ENDPOINT = "https://formspree.io/f/FORM_ID_HERE";
         };
 
         const startIncoming = () => {
-          incomingVideo.autoplay = true;
+          configureBackgroundVideo(incomingVideo, true);
           try {
             incomingVideo.currentTime = 0;
           } catch (error) {
@@ -321,6 +336,7 @@ const QUOTE_ENDPOINT = "https://formspree.io/f/FORM_ID_HERE";
     video.addEventListener("playing", markReady, { once: true });
     video.addEventListener("error", markFallback);
 
+    configureBackgroundVideo(video, true);
     playVideo(video);
   });
 

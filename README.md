@@ -13,7 +13,7 @@ Static HTML/CSS/JS website concepts for Clean Sweep, a professional street sweep
 - `concept-county-atlas.html` - map-led service-area concept
 - `styles.css` - shared responsive styling and concept-specific design systems
 - `script.js` - mobile navigation, smooth anchors, header shadow, reveal effects, pointer glow, dynamic year, and quote-form validation
-- `assets/logo/clean-sweep-logo.jpg` - official uploaded logo
+- `assets/logo/full-logo-transparent.png` - official transparent logo
 - `assets/images/` - street sweeping photography placeholders and image guide
 
 ## Preview locally
@@ -32,13 +32,13 @@ http://localhost:8080/
 
 ## Replace the logo
 
-The official uploaded logo is currently:
+The official transparent logo is currently:
 
 ```text
-assets/logo/clean-sweep-logo.jpg
+assets/logo/full-logo-transparent.png
 ```
 
-The JPG has a white rectangular background, so the layouts keep it on white or inside a white logo container. If a transparent PNG or SVG becomes available later, update the image path in the HTML files and keep the same aspect ratio.
+The header uses transparent symbol and wordmark crops from the same logo source for a compact horizontal lockup. Keep the PNG files optimized and avoid spaces in logo file names.
 
 ## Replace photographs
 
