@@ -794,7 +794,9 @@ textarea:focus {
 }
 
 .atlas-hero.video-hero {
-  background: var(--navy);
+  background:
+    linear-gradient(rgba(5, 35, 55, 0.22), rgba(5, 35, 55, 0.22)),
+    url("assets/logo/Main.JPG") center center / cover no-repeat;
 }
 
 .video-hero-cinematic .atlas-hero-grid {
@@ -1011,13 +1013,7 @@ textarea:focus {
   }
 }
 
-.hero-main-logo {
-  display: block;
-  width: min(100%, 460px);
-  height: auto;
-  margin: 0 auto 1.5rem;
-  object-fit: contain;
-}
+
 
 .atlas-image-band {
   margin: 0;
@@ -1275,10 +1271,7 @@ textarea:focus {
     width: min(100% - 24px, var(--container));
   }
 
-  .hero-main-logo {
-    width: min(100%, 320px);
-    margin-bottom: 1.2rem;
-  }
+
 
   .quote-video-hero .hero-video-overlay {
     z-index: 1;
