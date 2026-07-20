@@ -826,6 +826,74 @@ textarea:focus {
   color: var(--sky-blue);
 }
 
+.video-hero-cinematic .hero-shine-text {
+  position: relative;
+}
+
+.video-hero-cinematic .hero-shine-text::after {
+  content: attr(data-shine-text);
+  position: absolute;
+  inset: 0;
+  display: block;
+  pointer-events: none;
+  color: transparent;
+  background:
+    linear-gradient(
+      120deg,
+      transparent 28%,
+      rgba(84, 180, 232, 0.05) 40%,
+      rgba(84, 180, 232, 0.22) 46%,
+      rgba(255, 255, 255, 0.42) 50%,
+      rgba(84, 180, 232, 0.18) 54%,
+      transparent 66%
+    );
+  background-position: 150% -50%;
+  background-size: 260% 260%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: blur(0.35px);
+  font: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  opacity: 0;
+  text-align: inherit;
+  text-transform: inherit;
+  text-wrap: inherit;
+  mix-blend-mode: screen;
+  will-change: background-position, opacity;
+  animation: hero-text-shine 9.75s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes hero-text-shine {
+  0% {
+    opacity: 0;
+    background-position: 150% -50%;
+  }
+
+  4% {
+    opacity: 0;
+  }
+
+  8% {
+    opacity: 1;
+  }
+
+  26% {
+    opacity: 1;
+  }
+
+  32% {
+    opacity: 0;
+    background-position: -50% 150%;
+  }
+
+  100% {
+    opacity: 0;
+    background-position: -50% 150%;
+  }
+}
+
 @media (min-width: 921px) {
   .video-hero-cinematic .atlas-hero-grid {
     grid-template-columns: minmax(0, 680px);
@@ -1233,5 +1301,10 @@ textarea:focus {
   [data-reveal] {
     opacity: 1;
     transform: none;
+  }
+
+  .video-hero-cinematic .hero-shine-text::after {
+    content: none;
+    animation: none;
   }
 }
