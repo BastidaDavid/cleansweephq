@@ -777,6 +777,24 @@ textarea:focus {
   font-size: 1.02rem;
 }
 
+.video-hero-cinematic .atlas-copy {
+  text-align: center;
+}
+
+.video-hero-cinematic .atlas-copy h1 {
+  margin-inline: auto;
+  text-wrap: balance;
+}
+
+.video-hero-cinematic .atlas-copy p:not(.eyebrow) {
+  margin-inline: auto;
+  text-wrap: pretty;
+}
+
+.video-hero-cinematic .hero-actions {
+  justify-content: center;
+}
+
 .atlas-hero-grid {
   display: grid;
   grid-template-columns: minmax(0, 720px);
