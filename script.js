@@ -151,6 +151,12 @@ const QUOTE_ENDPOINT = "https://formspree.io/f/FORM_ID_HERE";
       .map((source) => source.trim())
       .filter(Boolean);
 
+    const isQuoteHero = hero.id === "free-quote" || hero.classList.contains("quote-video-hero");
+    const useMobileQuoteFallback =
+      isQuoteHero &&
+      window.matchMedia &&
+      window.matchMedia("(max-width: 720px)").matches;
+
     let playbackBlocked = false;
 
     const markReady = () => {
@@ -187,7 +193,57 @@ const QUOTE_ENDPOINT = "https://formspree.io/f/FORM_ID_HERE";
 
       target.autoplay = true;
       target.setAttribute("autoplay", "");
+
+      if (isQuoteHero) {
+        const preloadMode = useMobileQuoteFallback ? "metadata" : "auto";
+        target.preload = preloadMode;
+        target.setAttribute("preload", preloadMode);
+      }
     };
+
+    if (useMobileQuoteFallback) {
+      const source = playlist[0] || video.getAttribute("src");
+      const keepMobileVideoVisible = () => {
+        hero.classList.add("is-video-ready", "is-mobile-video-ready");
+        hero.classList.remove("is-video-fallback");
+      };
+      const markMobileVideoFallback = () => {
+        hero.classList.add("is-video-ready", "is-mobile-video-fallback");
+        hero.classList.remove("is-video-fallback");
+      };
+      const playMobileQuoteVideo = () => {
+        const playAttempt = video.play();
+        if (playAttempt && typeof playAttempt.catch === "function") {
+          playAttempt.then(keepMobileVideoVisible).catch(markMobileVideoFallback);
+          return;
+        }
+
+        if (!video.paused) keepMobileVideoVisible();
+      };
+
+      video.classList.add("hero-video-active", "quote-video-mobile-fallback");
+      video.classList.remove("hero-video-standby");
+      video.loop = true;
+      video.setAttribute("loop", "");
+      configureBackgroundVideo(video, true);
+
+      if (source && video.getAttribute("src") !== source) {
+        video.setAttribute("src", source);
+      }
+
+      video.addEventListener("loadedmetadata", playMobileQuoteVideo, { once: true });
+      video.addEventListener("loadeddata", keepMobileVideoVisible, { once: true });
+      video.addEventListener("canplay", keepMobileVideoVisible, { once: true });
+      video.addEventListener("playing", keepMobileVideoVisible, { once: true });
+      video.addEventListener("error", markMobileVideoFallback);
+      video.load();
+
+      if (video.readyState >= 1) {
+        playMobileQuoteVideo();
+      }
+
+      return;
+    }
 
     if (playlist.length > 1) {
       const crossfadeLeadTime = 1.2;
