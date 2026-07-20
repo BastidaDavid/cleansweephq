@@ -151,11 +151,9 @@ const QUOTE_ENDPOINT = "https://formspree.io/f/FORM_ID_HERE";
       .map((source) => source.trim())
       .filter(Boolean);
 
-    const isQuoteHero = hero.id === "free-quote" || hero.classList.contains("quote-video-hero");
-    const useMobileQuoteFallback =
-      isQuoteHero &&
-      window.matchMedia &&
-      window.matchMedia("(max-width: 720px)").matches;
+    const isQuoteHero =
+  hero.id === "free-quote" ||
+  hero.classList.contains("quote-video-hero");
 
     let playbackBlocked = false;
 
@@ -203,138 +201,13 @@ if (shouldAutoplay) {
 }
 
       if (isQuoteHero) {
-        const preloadMode = useMobileQuoteFallback ? "metadata" : "auto";
-        target.preload = preloadMode;
-        target.setAttribute("preload", preloadMode);
+        target.preload = "auto";
+        target.setAttribute("preload", "auto");
         target.poster = "assets/video/free-quote-poster.png";
         target.setAttribute("poster", "assets/video/free-quote-poster.png");
       }
     };
 
-    if (useMobileQuoteFallback) {
-  const source = playlist[0] || video.getAttribute("src");
-  let mobilePlayRetryTimer = null;
-
-  const keepMobileVideoVisible = () => {
-    hero.classList.add("is-video-ready", "is-mobile-video-ready");
-    hero.classList.remove("is-video-fallback", "is-mobile-video-fallback");
-  };
-
-  const showMobilePosterFallback = () => {
-    hero.classList.add("is-mobile-video-fallback");
-    hero.classList.remove(
-      "is-video-ready",
-      "is-video-fallback",
-      "is-mobile-video-ready"
-    );
-  };
-
-  const clearMobilePlayRetry = () => {
-    if (!mobilePlayRetryTimer) return;
-    window.clearTimeout(mobilePlayRetryTimer);
-    mobilePlayRetryTimer = null;
-  };
-
-  const playMobileQuoteVideo = () => {
-    clearMobilePlayRetry();
-
-    video.muted = true;
-    video.defaultMuted = true;
-    video.playsInline = true;
-    video.controls = false;
-    video.autoplay = true;
-
-    const playAttempt = video.play();
-
-    if (playAttempt && typeof playAttempt.then === "function") {
-      playAttempt
-        .then(() => {
-          if (!video.paused && video.readyState >= 2) {
-            keepMobileVideoVisible();
-          }
-        })
-        .catch(() => {
-          showMobilePosterFallback();
-          mobilePlayRetryTimer = window.setTimeout(
-            playMobileQuoteVideo,
-            1200
-          );
-        });
-
-      return;
-    }
-
-    if (!video.paused && video.readyState >= 2) {
-      keepMobileVideoVisible();
-    } else {
-      showMobilePosterFallback();
-      mobilePlayRetryTimer = window.setTimeout(
-        playMobileQuoteVideo,
-        1200
-      );
-    }
-  };
-
-  video.classList.add(
-    "hero-video-active",
-    "quote-video-mobile-fallback"
-  );
-  video.classList.remove("hero-video-standby");
-
-  video.loop = true;
-  video.setAttribute("loop", "");
-
-  configureBackgroundVideo(video, true);
-
-  video.preload = "auto";
-  video.setAttribute("preload", "auto");
-
-  if (source && video.getAttribute("src") !== source) {
-    video.setAttribute("src", source);
-  }
-
-  video.addEventListener("loadedmetadata", playMobileQuoteVideo);
-  video.addEventListener("canplay", playMobileQuoteVideo);
-  video.addEventListener("canplaythrough", playMobileQuoteVideo);
-  video.addEventListener("playing", keepMobileVideoVisible);
-
-  video.addEventListener("pause", () => {
-    if (document.visibilityState === "visible") {
-      mobilePlayRetryTimer = window.setTimeout(
-        playMobileQuoteVideo,
-        300
-      );
-    }
-  });
-
-  video.addEventListener("stalled", () => {
-    mobilePlayRetryTimer = window.setTimeout(
-      playMobileQuoteVideo,
-      800
-    );
-  });
-
-  video.addEventListener("error", showMobilePosterFallback);
-
-  document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "visible") {
-      playMobileQuoteVideo();
-    }
-  });
-
-  window.addEventListener("pageshow", playMobileQuoteVideo);
-
-  window.addEventListener(
-    "touchstart",
-    playMobileQuoteVideo,
-    { once: true, passive: true }
-  );
-
-  video.load();
-  playMobileQuoteVideo();
-
-  return;
-}
 
     if (playlist.length > 1) {
       const crossfadeLeadTime = 1.2;
