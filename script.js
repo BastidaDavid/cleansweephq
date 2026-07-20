@@ -211,7 +211,6 @@ if (shouldAutoplay) {
 
     if (playlist.length > 1) {
       const crossfadeLeadTime = 1.2;
-      const crossfadeCleanupDelay = 1300;
       let currentIndex = 0;
       let activeVideo = video;
       let standbyVideo = video.cloneNode(false);
@@ -280,11 +279,9 @@ if (shouldAutoplay) {
           currentIndex = nextIndex;
           markReady();
 
-          window.setTimeout(() => {
-            standbyVideo.pause();
-            switching = false;
-            prepareNext();
-          }, crossfadeCleanupDelay);
+          standbyVideo.pause();
+switching = false;
+prepareNext();
         };
 
         const startIncoming = () => {
