@@ -186,9 +186,12 @@ const QUOTE_ENDPOINT = "https://formspree.io/f/FORM_ID_HERE";
       target.defaultMuted = true;
       target.playsInline = true;
       target.controls = false;
+      target.disablePictureInPicture = true;
       target.setAttribute("muted", "");
       target.setAttribute("playsinline", "");
       target.setAttribute("webkit-playsinline", "");
+      target.setAttribute("disablepictureinpicture", "");
+      target.setAttribute("controlslist", "nodownload noplaybackrate nofullscreen");
       target.removeAttribute("controls");
 
       target.autoplay = true;
@@ -198,6 +201,8 @@ const QUOTE_ENDPOINT = "https://formspree.io/f/FORM_ID_HERE";
         const preloadMode = useMobileQuoteFallback ? "metadata" : "auto";
         target.preload = preloadMode;
         target.setAttribute("preload", preloadMode);
+        target.poster = "assets/video/free-quote-poster.png";
+        target.setAttribute("poster", "assets/video/free-quote-poster.png");
       }
     };
 
@@ -205,11 +210,11 @@ const QUOTE_ENDPOINT = "https://formspree.io/f/FORM_ID_HERE";
       const source = playlist[0] || video.getAttribute("src");
       const keepMobileVideoVisible = () => {
         hero.classList.add("is-video-ready", "is-mobile-video-ready");
-        hero.classList.remove("is-video-fallback");
+        hero.classList.remove("is-video-fallback", "is-mobile-video-fallback");
       };
       const markMobileVideoFallback = () => {
-        hero.classList.add("is-video-ready", "is-mobile-video-fallback");
-        hero.classList.remove("is-video-fallback");
+        hero.classList.add("is-mobile-video-fallback");
+        hero.classList.remove("is-video-ready", "is-video-fallback", "is-mobile-video-ready");
       };
       const playMobileQuoteVideo = () => {
         const playAttempt = video.play();
@@ -219,6 +224,7 @@ const QUOTE_ENDPOINT = "https://formspree.io/f/FORM_ID_HERE";
         }
 
         if (!video.paused) keepMobileVideoVisible();
+        else markMobileVideoFallback();
       };
 
       video.classList.add("hero-video-active", "quote-video-mobile-fallback");
@@ -232,8 +238,7 @@ const QUOTE_ENDPOINT = "https://formspree.io/f/FORM_ID_HERE";
       }
 
       video.addEventListener("loadedmetadata", playMobileQuoteVideo, { once: true });
-      video.addEventListener("loadeddata", keepMobileVideoVisible, { once: true });
-      video.addEventListener("canplay", keepMobileVideoVisible, { once: true });
+      video.addEventListener("canplay", playMobileQuoteVideo, { once: true });
       video.addEventListener("playing", keepMobileVideoVisible, { once: true });
       video.addEventListener("error", markMobileVideoFallback);
       video.load();

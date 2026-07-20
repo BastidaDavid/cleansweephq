@@ -495,6 +495,8 @@ p {
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .quote-video-hero .quote-video-layer {
@@ -504,6 +506,18 @@ p {
   object-fit: cover;
   object-position: center;
   filter: saturate(0.95) contrast(1.05);
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.quote-video-hero .quote-video-layer::-webkit-media-controls,
+.quote-video-hero .quote-video-layer::-webkit-media-controls-panel,
+.quote-video-hero .quote-video-layer::-webkit-media-controls-start-playback-button {
+  display: none !important;
+  -webkit-appearance: none;
+  opacity: 0;
 }
 
 .quote-video-hero .hero-video-overlay {
@@ -851,7 +865,8 @@ textarea:focus {
 }
 
 .video-hero-cinematic .hero-heading-text,
-.video-hero-cinematic .hero-heading-shine {
+.video-hero-cinematic .hero-heading-shine,
+.video-hero-cinematic .hero-heading-shine-word {
   display: block;
   font: inherit;
   letter-spacing: inherit;
@@ -871,6 +886,12 @@ textarea:focus {
   z-index: 2;
   pointer-events: none;
   color: transparent;
+  text-transform: inherit;
+}
+
+.video-hero-cinematic .hero-heading-shine-word {
+  display: inline-block;
+  position: relative;
   background:
     linear-gradient(
       120deg,
@@ -904,35 +925,68 @@ textarea:focus {
   opacity: 0;
   text-transform: inherit;
   will-change: background-position, opacity;
-  animation: hero-text-shine 9.75s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation: hero-word-shine 11s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation-delay: var(--shine-delay, 0s);
 }
 
-@keyframes hero-text-shine {
+.video-hero-cinematic .hero-heading-shine-word:nth-of-type(1) {
+  --shine-delay: 0s;
+}
+
+.video-hero-cinematic .hero-heading-shine-word:nth-of-type(2) {
+  --shine-delay: 0.65s;
+}
+
+.video-hero-cinematic .hero-heading-shine-word:nth-of-type(3) {
+  --shine-delay: 1.3s;
+}
+
+.video-hero-cinematic .hero-heading-shine-word:nth-of-type(4) {
+  --shine-delay: 1.95s;
+}
+
+.video-hero-cinematic .hero-heading-shine-word:nth-of-type(5) {
+  --shine-delay: 2.6s;
+}
+
+.video-hero-cinematic .hero-heading-shine-word:nth-of-type(6) {
+  --shine-delay: 3.25s;
+}
+
+.video-hero-cinematic .hero-heading-shine-word:nth-of-type(7) {
+  --shine-delay: 3.9s;
+}
+
+.video-hero-cinematic .hero-heading-shine-word:nth-of-type(8) {
+  --shine-delay: 4.55s;
+}
+
+@keyframes hero-word-shine {
   0% {
     opacity: 0;
-    background-position: 100% 0%;
+    background-position: 120% -20%, 120% -20%;
+  }
+
+  2% {
+    opacity: 0;
   }
 
   4% {
-    opacity: 0;
-  }
-
-  8% {
     opacity: 1;
   }
 
-  26% {
+  8.8% {
     opacity: 1;
   }
 
-  32% {
+  11.6% {
     opacity: 0;
-    background-position: 0% 100%;
+    background-position: -20% 120%, -20% 120%;
   }
 
   100% {
     opacity: 0;
-    background-position: 0% 100%;
+    background-position: -20% 120%, -20% 120%;
   }
 }
 
@@ -1224,12 +1278,7 @@ textarea:focus {
     position: absolute;
     inset: 0;
     z-index: 0;
-  }
-
-  .quote-video-hero.is-video-fallback .quote-video-layer,
-  .quote-video-hero.is-mobile-video-fallback .quote-video-layer,
-  .quote-video-hero.is-mobile-video-ready .quote-video-layer {
-    opacity: 1;
+    background: #031c2d url("assets/video/free-quote-poster.png") center / cover no-repeat;
   }
 
   .quote-video-hero .quote-video-layer {
@@ -1238,7 +1287,17 @@ textarea:focus {
     height: 100%;
     max-width: none;
     object-fit: cover;
+    opacity: 0;
+  }
+
+  .quote-video-hero.is-mobile-video-ready .quote-video-layer {
     opacity: 1;
+  }
+
+  .quote-video-hero:not(.is-mobile-video-ready) .quote-video-layer,
+  .quote-video-hero.is-mobile-video-fallback .quote-video-layer {
+    opacity: 0;
+    transition: none;
   }
 
   .quote-video-hero .quote-video-layer.hero-video-standby {
