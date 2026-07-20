@@ -840,12 +840,13 @@ textarea:focus {
   background:
     linear-gradient(
       120deg,
-      transparent 28%,
-      rgba(84, 180, 232, 0.05) 40%,
-      rgba(84, 180, 232, 0.22) 46%,
-      rgba(255, 255, 255, 0.42) 50%,
-      rgba(84, 180, 232, 0.18) 54%,
-      transparent 66%
+      transparent 42%,
+      rgba(84, 180, 232, 0.1) 45.5%,
+      rgba(117, 201, 245, 0.32) 48%,
+      rgba(255, 255, 255, 0.68) 50%,
+      rgba(117, 201, 245, 0.3) 52%,
+      rgba(84, 180, 232, 0.08) 54.5%,
+      transparent 58%
     );
   background-position: 150% -50%;
   background-size: 260% 260%;
